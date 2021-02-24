@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "141967714772",
+    "project_id": "chatapp-845e3",
+    "storage_bucket": "chatapp-845e3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:141967714772:android:9b4f3cc3a08764819cce41",
+        "android_client_info": {
+          "package_name": "com.noureach.chatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "141967714772-rbbdpk5jgp4odlh3nccjsf200b99s76g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQ4gBw0L8fQm7O3TqUH2wCC9cdxfOh1o4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "141967714772-rbbdpk5jgp4odlh3nccjsf200b99s76g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
