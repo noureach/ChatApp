@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 User user = snapshot.getValue(User.class);
-                assert user != null;
                 username.setText(user.getUsername());
                 if (user.getImageURL().equals("default")){
                     profileImage.setImageResource(R.drawable.ic_default_image);

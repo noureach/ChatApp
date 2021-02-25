@@ -19,10 +19,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.noureach.chatapp.Adapter.UserAdapter;
 import com.noureach.chatapp.Model.Chat;
 import com.noureach.chatapp.Model.ChatList;
 import com.noureach.chatapp.Model.User;
+import com.noureach.chatapp.Notifications.Token;
 import com.noureach.chatapp.R;
 
 import java.util.ArrayList;
@@ -78,7 +80,15 @@ public class ChatsFragment extends Fragment {
             }
         });
 
+        updateToken(FirebaseInstanceId.getInstance().getToken());
+
         return view;
+    }
+
+    private void updateToken(String token){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tokens");
+        Token token1 = new Token(token);
+        reference.child(fUser.getUid()).setValue(token1);
     }
 
     private void chatList(){

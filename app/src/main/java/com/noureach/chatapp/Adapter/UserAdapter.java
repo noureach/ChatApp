@@ -2,6 +2,8 @@ package com.noureach.chatapp.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,7 @@ import com.noureach.chatapp.Model.Chat;
 import com.noureach.chatapp.Model.User;
 import com.noureach.chatapp.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> {
@@ -59,7 +62,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
         }
 
         if (isChat){
-            latestMessage(user.getId(), holder.latestMsg);
+            latestMessage(user.getId(), holder.latestMsg, holder.countMsg);
         }else {
             holder.latestMsg.setVisibility(View.GONE);
         }
@@ -81,7 +84,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, MessageActivity.class);
-                intent.putExtra("userId", user.getId());
+                intent.putExtra("userid", user.getId());
                 mContext.startActivity(intent);
             }
         });
@@ -99,6 +102,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
         public ImageView imageOn;
         public ImageView imageOff;
         public TextView latestMsg;
+        public TextView countMsg;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -108,23 +112,40 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
             imageOn = itemView.findViewById(R.id.img_on);
             imageOff = itemView.findViewById(R.id.img_off);
             latestMsg = itemView.findViewById(R.id.last_smg);
+            countMsg = itemView.findViewById(R.id.tvCount);
         }
     }
 
-    private void latestMessage(String userId, TextView latest_message){
+    private void latestMessage(String userId, TextView latest_message, TextView countSmg){
         theLatestMessage = "default";
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Chats");
+
+        if (firebaseUser != null)
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    Chat chat = dataSnapshot.getValue(Chat.class);
+                Chat chat = dataSnapshot.getValue(Chat.class);
                     if (chat.getReceiver().equals(firebaseUser.getUid()) && chat.getSender().equals(userId) ||
-                            chat.getReceiver().equals(userId) && chat.getSender().equals(firebaseUser.getUid())){
-                        theLatestMessage = chat.getMessage();
+                            chat.getReceiver().equals(userId) && chat.getSender().equals(firebaseUser.getUid())) {
+                        if (firebaseUser.getUid().equals(chat.getSender())) {
+                            theLatestMessage = "You: " + chat.getMessage();
+                        } else {
+                            theLatestMessage = chat.getMessage();
+                        }
+
+                        if (!chat.isIsseen() && firebaseUser.getUid().equals(chat.getReceiver())) {
+                            latest_message.setTypeface(null, Typeface.BOLD);
+                            latest_message.setTextColor(Color.BLACK);
+                            countSmg.setVisibility(View.VISIBLE);
+                        } else {
+                            latest_message.setTypeface(null, Typeface.NORMAL);
+                            countSmg.setVisibility(View.GONE);
+                        }
                     }
                 }
+
                 switch (theLatestMessage){
                     case "default" :
                         latest_message.setText("No message");
