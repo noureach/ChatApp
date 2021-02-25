@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -295,6 +296,12 @@ public class MessageActivity extends AppCompatActivity {
         });
     }
 
+    private void currentUser(String userId){
+        SharedPreferences.Editor editor = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
+        editor.putString("currentuser", userId);
+        editor.apply();
+    }
+
     private void status(String status){
         reference = FirebaseDatabase.getInstance().getReference("User").child(fUser.getUid());
 
@@ -308,6 +315,7 @@ public class MessageActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         status("online");
+        currentUser(userId);
     }
 
     @Override
@@ -315,6 +323,7 @@ public class MessageActivity extends AppCompatActivity {
         super.onPause();
         reference.removeEventListener(seenListener);
         status("offline");
+        currentUser("none");
     }
 }
 

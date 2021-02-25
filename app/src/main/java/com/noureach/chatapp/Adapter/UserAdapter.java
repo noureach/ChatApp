@@ -125,6 +125,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int unread = 0;
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
                 Chat chat = dataSnapshot.getValue(Chat.class);
                     if (chat.getReceiver().equals(firebaseUser.getUid()) && chat.getSender().equals(userId) ||
@@ -139,6 +140,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyViewHolder> 
                             latest_message.setTypeface(null, Typeface.BOLD);
                             latest_message.setTextColor(Color.BLACK);
                             countSmg.setVisibility(View.VISIBLE);
+                            unread++;
+                            countSmg.setText(unread+"");
                         } else {
                             latest_message.setTypeface(null, Typeface.NORMAL);
                             countSmg.setVisibility(View.GONE);
